@@ -11,7 +11,9 @@ from app.models.models import User
 from app.schemas.schemas import UserCreate, UserOut, Token, UserLogin
 
 # Security configuration
-SECRET_KEY = "AEGIS_SECRET_KEY_FOR_LOCAL_DEV_CHANGE_IN_PROD"
+import os
+
+SECRET_KEY = os.getenv("SECRET_KEY", "AEGIS_SECRET_KEY_FOR_LOCAL_DEV_CHANGE_IN_PROD")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 24 hours
 
