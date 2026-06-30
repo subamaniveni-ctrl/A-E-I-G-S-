@@ -1,0 +1,25 @@
+Generate a study quiz from the following study notes for the topic '{topic}'.
+The quiz must contain exactly {num_questions} questions, consisting of a mix of Multiple Choice Questions (MCQ) and Short Answer (short) questions.
+You MUST respond with a VALID JSON array and NOTHING else. No markdown wrapping (like ```json), no intro text, no conversational text, no trailing notes.
+Each question object in the JSON array must follow this exact schema:
+[
+  {{
+    "id": 1,
+    "type": "mcq",
+    "question": "What does SQL stand for?",
+    "options": ["Structured Query Language", "Structured Quick Language", "Simple Query Language", "Sequential Query Language"],
+    "correct_answer": "Structured Query Language"
+  }},
+  {{
+    "id": 2,
+    "type": "short",
+    "question": "Explain primary key in DBMS.",
+    "options": [],
+    "correct_answer": "A primary key is a unique identifier for a database record."
+  }}
+]
+
+Study Notes Context:
+{notes}
+
+JSON Output:

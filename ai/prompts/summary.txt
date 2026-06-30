@@ -1,0 +1,11 @@
+Create a concise, high-quality, and comprehensive summary of the following study notes for the topic '{topic}'.
+Structure the summary using clean markdown with:
+- Key Concepts
+- Detailed Explanations
+- Key Terms & Definitions
+- Critical Formulas/Architectures (if applicable)
+
+Study Notes:
+{notes}
+
+Summary:
