@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
+    --background: 240 18% 4.7%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 240 16% 8.5%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 240 18% 4.7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 263.4 90% 64.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 10% 14.5%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --muted: 240 10% 14.5%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 191.6 91.4% 48%;
+    --accent-foreground: 240 18% 4.7%;
+    --destructive: 346.8 77.2% 49.8%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --radius: 0.75rem;
+    --border: 240 10% 16.5%;
+    --input: 240 10% 16.5%;
+    --ring: 263.4 90% 64.3%;
+    --radius: 1.25rem;
   }
 }
 
@@ -32,17 +32,38 @@
     border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(263, 90%, 64%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(191, 91%, 48%, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
   }
   
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
   /* Glassmorphic utilities */
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] shadow-2xl;
   }
   
   .glass-card {
-    @apply bg-card/40 backdrop-blur-lg border border-white/10 rounded-2xl shadow-xl;
+    @apply bg-card/30 backdrop-blur-xl border border-white/[0.08] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-white/[0.12] shadow-[0_8px_40px_0_rgba(139,92,246,0.05)];
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 25px -5px hsla(263, 90%, 64%, 0.4);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 25px -5px hsla(191, 91%, 48%, 0.4);
   }
 
   /* Custom scrollbar */
@@ -54,9 +75,23 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-white/20 rounded-full;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-white/40;
+    @apply bg-white/10 rounded-full hover:bg-white/25 transition-all;
   }
 }
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+

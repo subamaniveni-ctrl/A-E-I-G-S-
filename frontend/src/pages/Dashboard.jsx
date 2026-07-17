@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Brain, BookOpen, Target, Activity } from 'lucide-react';
+import { Brain, BookOpen, Target, Activity, Settings } from 'lucide-react';
 import ChatWindow from '../components/ChatWindow';
 import NoteUploader from '../components/NoteUploader';
 import QuizView from '../components/QuizView';
 import ProgressTracker from '../components/ProgressTracker';
+import SettingsView from '../components/SettingsView';
 
 export default function Dashboard({ token }) {
   const [activeTab, setActiveTab] = useState('chat');
@@ -48,9 +49,15 @@ export default function Dashboard({ token }) {
             active={activeTab === 'progress'} 
             onClick={() => setActiveTab('progress')} 
           />
+          <NavItem 
+            icon={<Settings />} 
+            label="Settings" 
+            active={activeTab === 'settings'} 
+            onClick={() => setActiveTab('settings')} 
+          />
         </div>
         
-        {/* Quick Stats Mini-Widget could go here */}
+        {/* Quick Stats Mini-Widget */}
         <div className="glass-card p-6 mt-auto hidden lg:block bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
           <h3 className="text-sm font-semibold mb-2">Ready to study?</h3>
           <p className="text-xs text-muted-foreground">
@@ -67,6 +74,7 @@ export default function Dashboard({ token }) {
         {activeTab === 'notes' && <NoteUploader />}
         {activeTab === 'quiz' && <QuizView initialTopic={activeQuizTopic} onComplete={endQuiz} />}
         {activeTab === 'progress' && <ProgressTracker />}
+        {activeTab === 'settings' && <SettingsView />}
       </div>
     </div>
   );

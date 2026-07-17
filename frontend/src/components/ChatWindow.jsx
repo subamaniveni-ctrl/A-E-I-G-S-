@@ -15,12 +15,8 @@ export default function ChatWindow({ token, onQuizRequested }) {
   const audioRef = useRef(new Audio());
 
   useEffect(() => {
-    // Determine WS protocol
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Use the proxy if available, otherwise direct port
-    const wsUrl = import.meta.env.DEV 
-      ? `ws://localhost:8000/api/chat/ws/${sessionId}?token=${token}`
-      : `${protocol}//${window.location.host}/api/chat/ws/${sessionId}?token=${token}`;
+    const wsUrl = `${protocol}//${window.location.host}/api/chat/ws/${sessionId}?token=${token}`;
       
     const websocket = new WebSocket(wsUrl);
 
@@ -103,10 +99,10 @@ export default function ChatWindow({ token, onQuizRequested }) {
             <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-semibold tracking-wide">Aegis</h2>
-            <p className="text-xs text-green-400 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-              {isConnected ? 'Online & Listening' : 'Connecting...'}
+            <h2 className="font-semibold tracking-wide">Aegis AI Chat</h2>
+            <p className={`text-[10px] font-semibold flex items-center gap-1 ${isConnected ? 'text-emerald-400' : 'text-red-400'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></span>
+              {isConnected ? 'Connected & Listening' : 'AI Offline (Click Settings to Configure)'}
             </p>
           </div>
         </div>
@@ -115,9 +111,34 @@ export default function ChatWindow({ token, onQuizRequested }) {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-muted-foreground space-y-4 opacity-50">
-            <Bot className="w-16 h-16" />
-            <p className="text-center max-w-sm">Say something like: "Aegis, let's prepare for my DBMS exam."</p>
+          <div className="h-full flex flex-col items-center justify-center p-8 space-y-6">
+            <div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 text-primary animate-pulse-glow">
+              <Bot className="w-12 h-12" />
+            </div>
+            
+            <div className="text-center max-w-md space-y-2">
+              <h3 className="text-xl font-bold">Talk to A.E.G.I.S</h3>
+              <p className="text-muted-foreground text-sm">
+                Say something like <span className="text-primary italic">"Aegis, let's prepare for DBMS"</span>. Your study companion will summarize notes, prompt active recall quizzes, and speak response answers.
+              </p>
+            </div>
+
+            {!isConnected && (
+              <div className="w-full max-w-md p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-left space-y-3 shadow-xl">
+                <p className="text-xs font-bold text-red-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                  Local AI Core Offline
+                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  A.E.G.I.S operates local-first to protect study note privacy. To get started:
+                </p>
+                <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal pl-4 font-semibold">
+                  <li>Install and run <a href="https://ollama.com" target="_blank" rel="noreferrer" className="text-primary hover:underline">Ollama</a>.</li>
+                  <li>Pull the default model in your terminal: <code className="bg-black/40 px-1 py-0.5 rounded font-mono text-[11px] text-white">ollama run llama3</code>.</li>
+                  <li>If you already have models, configure your endpoint and select models in the <span className="text-primary font-semibold">Settings</span> tab.</li>
+                </ol>
+              </div>
+            )}
           </div>
         )}
         
@@ -129,11 +150,11 @@ export default function ChatWindow({ token, onQuizRequested }) {
               </div>
             ) : (
               <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-purple-600' : 'bg-primary/20 text-primary border border-primary/30'}`}>
+                <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-gradient-to-br from-primary to-accent' : 'bg-primary/20 text-primary border border-primary/30'}`}>
                   {msg.role === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4" />}
                 </div>
                 <div className="space-y-2">
-                  <div className={`p-4 rounded-2xl ${msg.role === 'user' ? 'bg-primary text-primary-foreground rounded-tr-sm' : 'glass bg-white/5 rounded-tl-sm'}`}>
+                  <div className={`p-4 rounded-2xl ${msg.role === 'user' ? 'bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground rounded-tr-sm shadow-lg shadow-primary/10' : 'glass bg-white/[0.04] border border-white/[0.08] rounded-tl-sm shadow-md'}`}>
                     <div className="prose prose-invert max-w-none text-sm whitespace-pre-wrap">
                       {msg.content}
                     </div>
@@ -147,7 +168,7 @@ export default function ChatWindow({ token, onQuizRequested }) {
                           key={i}
                           onClick={() => handleAction(act)}
                           disabled={act.type === 'tts' && isPlayingAudio}
-                          className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/40 hover:text-indigo-200 border border-indigo-500/30 transition-colors"
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/40 hover:text-indigo-200 border border-indigo-500/30 transition-colors cursor-pointer"
                         >
                           {act.type === 'quiz' ? <PlayCircle className="w-3.5 h-3.5" /> : (isPlayingAudio && act.type === 'tts' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Volume2 className="w-3.5 h-3.5" />)}
                           {act.type === 'quiz' ? `Take Quiz: ${act.topic}` : 'Read Aloud'}

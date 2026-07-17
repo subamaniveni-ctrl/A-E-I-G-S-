@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from app.db import engine, Base
-from app.routers import auth, notes, chat, quiz, progress, speech
+from app.routers import auth, notes, chat, quiz, progress, speech, ollama
 
 # Create database tables automatically
 Base.metadata.create_all(bind=engine)
@@ -37,6 +37,7 @@ app.include_router(chat.router)
 app.include_router(quiz.router)
 app.include_router(progress.router)
 app.include_router(speech.router)
+app.include_router(ollama.router)
 
 @app.get("/")
 def read_root():

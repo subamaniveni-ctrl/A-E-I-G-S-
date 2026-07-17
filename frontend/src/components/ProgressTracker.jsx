@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flame, Clock, Target, AlertCircle, Loader2 } from 'lucide-react';
+import { Flame, Clock, Target, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import api from '../lib/api';
 

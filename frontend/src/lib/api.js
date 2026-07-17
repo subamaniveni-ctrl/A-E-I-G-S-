@@ -12,4 +12,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Auto-logout on expired/invalid tokens
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token is expired or invalid — clear it and force re-login
+      localStorage.removeItem('aegis_token');
+      window.location.reload();
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

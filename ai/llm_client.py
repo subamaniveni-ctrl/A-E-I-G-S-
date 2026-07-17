@@ -4,11 +4,12 @@ import requests
 from typing import List, Dict, Any, Generator, Union
 
 class LLMClient:
+    # Class-level configuration settings for dynamic update via API
+    base_url = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+    model = os.getenv("OLLAMA_MODEL", "llama3")
+    system_prompt_override = ""
+
     def __init__(self):
-        # Configurable via environment variables
-        self.base_url = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
-        self.model = os.getenv("OLLAMA_MODEL", "llama3")
-        
         # Load prompt templates
         current_dir = os.path.dirname(os.path.abspath(__file__))
         self.prompts_dir = os.path.join(current_dir, "prompts")
@@ -36,8 +37,18 @@ class LLMClient:
         If stream=True, returns a generator that yields text chunks.
         """
         payload_messages = []
-        if system_prompt:
-            payload_messages.append({"role": "system", "content": system_prompt})
+        
+        # Integrate custom system prompt override if specified
+        effective_system_prompt = system_prompt
+        if LLMClient.system_prompt_override:
+            override_msg = f"\n[STUDY ASSISTANT PERSONALITY DIRECTIVE]: {LLMClient.system_prompt_override}"
+            if system_prompt:
+                effective_system_prompt = f"{system_prompt}{override_msg}"
+            else:
+                effective_system_prompt = override_msg.strip()
+
+        if effective_system_prompt:
+            payload_messages.append({"role": "system", "content": effective_system_prompt})
         payload_messages.extend(messages)
 
         payload = {
